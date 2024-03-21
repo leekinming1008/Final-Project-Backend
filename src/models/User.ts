@@ -22,6 +22,10 @@ const userSchema = new Schema({
     wishList: {
         type: Array,
         required: [false],
+    },
+    password: {
+        type: String,
+        required: [true, "Password is required"],
     }
 
 })
