@@ -25,7 +25,7 @@ export const createUser = async (req: Request, res: Response) => {
         res.status(201).json({
             status: "success",
             data: {
-                plane: response,
+                AddedUser: response,
             }
         });
     } catch (error) {
