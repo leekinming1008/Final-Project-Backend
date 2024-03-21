@@ -57,8 +57,6 @@ export const editUser = async (req: Request, res: Response)=> {
     try {
         const {userId} = req.params;
         const updatedInfo = req.body;
-        console.log(updatedInfo)
-        console.log(userId)
         const response = await User.updateOne({_id: userId}, updatedInfo);
         res.status(201).json({
             status: "success",
@@ -70,4 +68,20 @@ export const editUser = async (req: Request, res: Response)=> {
         })
         console.error("Error catch when calling the edit planes function.", error);
     }
+}
+
+export const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.params;
+        const response = await User.deleteOne({_id: userId});
+        res.status(202).json({
+            status: "success",
+            deletedUser: response});
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the delete planes function.", error);
+    }   
 }
