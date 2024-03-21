@@ -52,3 +52,22 @@ export const checkUserPassword = async (req: Request, res:Response) => {
         console.error("Get error for check user password function: ", error)
     }
 }
+
+export const editUser = async (req: Request, res: Response)=> {
+    try {
+        const {userId} = req.params;
+        const updatedInfo = req.body;
+        console.log(updatedInfo)
+        console.log(userId)
+        const response = await User.updateOne({_id: userId}, updatedInfo);
+        res.status(201).json({
+            status: "success",
+            updatedInfo: response});
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the edit planes function.", error);
+    }
+}
