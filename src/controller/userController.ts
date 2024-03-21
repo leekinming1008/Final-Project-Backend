@@ -1,11 +1,10 @@
 import User from "../models/User";
 import {Request, Response} from "express";
 
-export const getUserInfo = async (req: Request, res: Response) => {
-    
+export const getUserInfo = async (req: Request, res: Response) => {   
     try {
         const {userId} = req.params;
-        const response = User.findById(userId);
+        const response = await User.findById(userId);
         res.status(200).json({
             status: "success",
             data: response,
@@ -21,8 +20,8 @@ export const getUserInfo = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const response = await User.create(req.body);
-        res.status(201).json({
+            const response = await User.create(req.body);
+            res.status(201).json({
             status: "success",
             data: {
                 AddedUser: response,
@@ -34,5 +33,22 @@ export const createUser = async (req: Request, res: Response) => {
             message: error,
         })
         console.error("Get error for create user function: ", error)
+    }
+}
+
+export const checkUserPassword = async (req: Request, res:Response) => {
+    try {
+        const {emailAddress, password} = req.body;
+        const response = await User.findOne({emailAddress: emailAddress});
+        res.status(201).json({
+            status: "success",
+            result: password == response?.password,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Get error for check user password function: ", error)
     }
 }
