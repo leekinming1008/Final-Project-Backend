@@ -1,4 +1,5 @@
 import express from "express";
+import userRouter from "./routes/userRoutes"
 const app = express();
 
 // MIDDLEWARE for format the request body
@@ -8,7 +9,7 @@ app.use(express.json({limit: "10kb"}));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // Routing
-// app.use("/api", router)
+ app.use("/api/user", userRouter)
 
 // get to the home page
 app.get("/", (req, res) => {
