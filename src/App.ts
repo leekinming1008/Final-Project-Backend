@@ -1,6 +1,6 @@
 import express from "express";
 import userRouter from "./routes/userRoutes"
-import categoryRouter from "./routes/categoryRoutes";
+import commentRouter from "./routes/commentRoutes";
 const app = express();
 
 // MIDDLEWARE for format the request body
@@ -10,7 +10,8 @@ app.use(express.json({limit: "10kb"}));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // Routing
-app.use("/api/user", userRouter)
+app.use("/api/user", userRouter);
+app.use("/api/comment", commentRouter);
 
 // get to the home page
 app.get("/", (req, res) => {
