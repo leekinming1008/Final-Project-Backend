@@ -61,11 +61,11 @@ export const getUserProducts = async (req: Request, res: Response) => {
 export const addProduct = async (req: Request, res: Response) => {
     console.log(req.body);
     try {
-        const newCar = await Product.create(req.body);
+        const newProduct = await Product.create(req.body);
         res.status(201).json({
           status: "success",
           data: {
-            car: newCar,
+            product: newProduct,
           },
         });
       } catch (err) {

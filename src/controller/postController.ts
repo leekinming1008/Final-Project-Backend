@@ -43,11 +43,11 @@ export const getUserposts = async (req: Request, res: Response) => {
 export const addpost = async (req: Request, res: Response) => {
     console.log(req.body);
     try {
-        const newCar = await Post.create(req.body);
+        const newPost = await Post.create(req.body);
         res.status(201).json({
           status: "success",
           data: {
-            car: newCar,
+            post: newPost,
           },
         });
       } catch (err) {
