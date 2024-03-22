@@ -32,8 +32,8 @@ export const createComment = async (req: Request, res: Response) => {
                     }
                 });
             } else {
-                res.status(201).json({
-                    status: "success",
+                res.status(400).json({
+                    status: "fail",
                     message: "The target user or source user is not found, please double check"
                 });
             }
