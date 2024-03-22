@@ -23,7 +23,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
   // get all posts that matches the userID
 export const getUserposts = async (req: Request, res: Response) => {
     try {
-        const data = await Post.find({userID: req.params});
+        const data = await Post.find({userID: req.params.userID});
     
         res.status(200).json({
           status: "success",
@@ -41,7 +41,6 @@ export const getUserposts = async (req: Request, res: Response) => {
 
 //add post
 export const addpost = async (req: Request, res: Response) => {
-    console.log(req.body);
     try {
         const newPost = await Post.create(req.body);
         res.status(201).json({
@@ -62,9 +61,8 @@ export const addpost = async (req: Request, res: Response) => {
 //edit post
 export const editpost = async (req: Request, res: Response)=> {
         try {
-            const {userId} = req.params;
             const updatedInfo = req.body;
-            const response = await Post.updateOne({_id: userId}, updatedInfo);
+            const response = await Post.updateOne({_id: req.params.postId}, updatedInfo);
             res.status(201).json({
                 status: "success",
                 updatedInfo: response});
@@ -80,7 +78,7 @@ export const editpost = async (req: Request, res: Response)=> {
 // delete a post
 export const removepost = async (req: Request, res: Response) => {
     try {
-      const data = await Post.deleteOne({_id:req.params.id});
+      const data = await Post.deleteOne({_id:req.params.postId});
       res.status(204).json({
         status: "success",
       });

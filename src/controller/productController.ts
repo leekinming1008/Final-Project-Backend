@@ -23,7 +23,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 // get a single products
 export const getProduct = async (req: Request, res: Response) => {
     try {
-      const data = await Product.findById(req.params.id);
+      const data = await Product.findById(req.params.productId);
         
       res.status(200).json({
         status: "success",
@@ -41,7 +41,7 @@ export const getProduct = async (req: Request, res: Response) => {
   // get all products that matches the userID
 export const getUserProducts = async (req: Request, res: Response) => {
     try {
-        const data = await Product.find({userID: req.params});
+        const data = await Product.find({userID: req.params.userId});
     
         res.status(200).json({
           status: "success",
@@ -80,9 +80,8 @@ export const addProduct = async (req: Request, res: Response) => {
 //edit product
 export const editProduct = async (req: Request, res: Response)=> {
         try {
-            const {userId} = req.params;
             const updatedInfo = req.body;
-            const response = await Product.updateOne({_id: userId}, updatedInfo);
+            const response = await Product.updateOne({_id: req.params.productId}, updatedInfo);
             res.status(201).json({
                 status: "success",
                 updatedInfo: response});
@@ -98,7 +97,7 @@ export const editProduct = async (req: Request, res: Response)=> {
 // delete a product
 export const removeProduct = async (req: Request, res: Response) => {
     try {
-      const data = await Product.deleteOne({_id:req.params.id});
+      const data = await Product.deleteOne({_id:req.params.productId});
       res.status(204).json({
         status: "success",
       });
