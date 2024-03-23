@@ -75,8 +75,6 @@ export const editUser = async (req: Request, res: Response)=> {
     }
 }
 
-
-// TODO: need to delete all the product, comment and user informaiton for that user
 export const deleteUser = async (req: Request, res: Response) => {
     try {
         const {userID} = req.params;
@@ -138,5 +136,27 @@ export const getWishlistbyUser = async (req: Request, res:Response) => {
             message: error,
         })
         console.error("Error catch when calling the get wishlist by user function.", error);
+    }
+}
+
+export const removeProductFromWishlist = async (req: Request, res: Response) => {
+    const {userID, productID} = req.body;
+    const user = await User.findById(userID);
+    try {
+        if (user) {
+            const userWishlist = user.wishList;
+            userWishlist.splice(userWishlist.indexOf({productID}), 1);
+            const response = await User.updateOne({_id: userID}, user);
+            res.status(202).json({
+                status: "success",
+                wishlist: response
+            });
+        }
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the remove product from wish list function.", error);
     }
 }

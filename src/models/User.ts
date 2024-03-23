@@ -27,7 +27,6 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password is required"],
     }
-
 })
 
 export default model("user", userSchema)
