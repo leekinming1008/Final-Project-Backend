@@ -116,3 +116,20 @@ export const addProductToWishlist = async (req: Request, res: Response) => {
         console.error("Error catch when calling the add product to wishlist function.", error);
     }   
 }
+
+export const getWishlistbyUser = async (req: Request, res:Response) => {
+    try {
+        const {userID} = req.body;
+        const response = await User.findById(userID);
+        res.status(202).json({
+            status: "success",
+            wishlist: response?.wishList
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the get wishlist by user function.", error);
+    }
+}
