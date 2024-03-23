@@ -25,13 +25,22 @@ export const getUserInfo = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-            const response = await User.create(req.body);
-            res.status(201).json({
-            status: "success",
-            data: {
-                AddedUser: response,
+            const isEmailAddressAppear = await User.find({emailAddress: req.body.emailAddress});
+            if (isEmailAddressAppear) {
+                res.status(400).json({
+                    status: "fail",
+                    message: "The email address already exist in the database" 
+                });
+            } else {
+                const response = await User.create(req.body);
+                res.status(201).json({
+                    status: "success",
+                    data: {
+                        AddedUser: response,
+                    }
+                });
             }
-        });
+            
     } catch (error) {
         res.status(400).json({
             status: "fail",
