@@ -1,10 +1,15 @@
+import Comment from "../models/Comment";
 import User from "../models/User";
+import post from "../models/post";
+import Product from "../models/product"
 import {Request, Response} from "express";
 
-export const getUserInfo = async (req: Request, res: Response) => {   
+export const getUserInfo = async (req: Request, res: Response) => {
+    console.log("Enter the get user info function");   
     try {
-        const {userId} = req.params;
-        const response = await User.findById(userId);
+        const {userID} = req.params;
+        console.log(userID)
+        const response = await User.findById(userID);
         res.status(200).json({
             status: "success",
             data: response,
@@ -55,9 +60,9 @@ export const checkUserPassword = async (req: Request, res:Response) => {
 
 export const editUser = async (req: Request, res: Response)=> {
     try {
-        const {userId} = req.params;
+        const {userID} = req.params;
         const updatedInfo = req.body;
-        const response = await User.updateOne({_id: userId}, updatedInfo);
+        const response = await User.updateOne({_id: userID}, updatedInfo);
         res.status(201).json({
             status: "success",
             updatedInfo: response});
@@ -66,22 +71,92 @@ export const editUser = async (req: Request, res: Response)=> {
             status: "fail",
             message: error,
         })
-        console.error("Error catch when calling the edit planes function.", error);
+        console.error("Error catch when calling the edit user function.", error);
     }
 }
 
 export const deleteUser = async (req: Request, res: Response) => {
     try {
-        const {userId} = req.params;
-        const response = await User.deleteOne({_id: userId});
+        const {userID} = req.params;
+        const userDelete = await User.deleteOne({_id: userID});
+        const productDelete = await Product.deleteMany({userID: userID});
+        const postDelete = await post.deleteMany({userID: userID});
+        const commentDelete = await Comment.deleteMany({targetUserID: userID} || {sourceUserID: userID});
         res.status(202).json({
             status: "success",
-            deletedUser: response});
+            deletedItems: [userDelete, productDelete, postDelete, commentDelete]});
     } catch (error) {
         res.status(400).json({
             status: "fail",
             message: error,
         })
-        console.error("Error catch when calling the delete planes function.", error);
+        console.error("Error catch when calling the delete user function.", error);
     }   
+}
+
+export const addProductToWishlist = async (req: Request, res: Response) => {
+    try {
+        const {userID, productID} = req.body;
+        const user = await User.findById(userID);
+        const product = await Product.findById(productID);
+        if (user && product) {
+            user.wishList.push(product);
+            const response = await User.updateOne({_id: userID}, user);
+            res.status(202).json({
+                status: "success",
+                updatedResult: response
+            });
+        } else {
+            res.status(202).json({
+                status: "success",
+                message: "User is not found"
+            });
+        }
+        
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the add product to wishlist function.", error);
+    }   
+}
+
+export const getWishlistbyUser = async (req: Request, res:Response) => {
+    try {
+        const {userID} = req.body;
+        const response = await User.findById(userID);
+        res.status(202).json({
+            status: "success",
+            wishlist: response?.wishList
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the get wishlist by user function.", error);
+    }
+}
+
+export const removeProductFromWishlist = async (req: Request, res: Response) => {
+    const {userID, productID} = req.body;
+    const user = await User.findById(userID);
+    try {
+        if (user) {
+            const userWishlist = user.wishList;
+            userWishlist.splice(userWishlist.indexOf({productID}), 1);
+            const response = await User.updateOne({_id: userID}, user);
+            res.status(202).json({
+                status: "success",
+                wishlist: response
+            });
+        }
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the remove product from wish list function.", error);
+    }
 }

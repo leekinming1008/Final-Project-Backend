@@ -62,7 +62,7 @@ export const addpost = async (req: Request, res: Response) => {
 export const editpost = async (req: Request, res: Response)=> {
         try {
             const updatedInfo = req.body;
-            const response = await Post.updateOne({_id: req.params.postId}, updatedInfo);
+            const response = await Post.updateOne({_id: req.params.postID}, updatedInfo);
             res.status(201).json({
                 status: "success",
                 updatedInfo: response});
@@ -78,7 +78,7 @@ export const editpost = async (req: Request, res: Response)=> {
 // delete a post
 export const removepost = async (req: Request, res: Response) => {
     try {
-      const data = await Post.deleteOne({_id:req.params.postId});
+      const data = await Post.deleteOne({_id:req.params.postID});
       res.status(204).json({
         status: "success",
       });

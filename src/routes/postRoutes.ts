@@ -6,7 +6,7 @@ const postRouter = express.Router();
 postRouter.route("/").get(getAllPosts);
 postRouter.route("/:userID").get(getUserposts);
 postRouter.route("/").post(addpost);
-postRouter.route("/:postId").put(editpost);
-postRouter.route("/:postId").delete(removepost);
+postRouter.route("/:postID").put(editpost);
+postRouter.route("/:postID").delete(removepost);
 
 export default postRouter;
