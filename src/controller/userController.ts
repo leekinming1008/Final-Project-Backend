@@ -71,10 +71,20 @@ export const editUser = async (req: Request, res: Response)=> {
     try {
         const {userID} = req.params;
         const updatedInfo = req.body;
-        const response = await User.updateOne({_id: userID}, updatedInfo);
-        res.status(201).json({
-            status: "success",
-            updatedInfo: response});
+        const isEmailAddressAppear = await User.find({emailAddress: updatedInfo.emailAddress});
+        if (isEmailAddressAppear.length == 1 && userID == isEmailAddressAppear[0]._id.toString()) {
+            const response = await User.updateOne({_id: userID}, updatedInfo);
+            res.status(201).json({
+                status: "success",
+                updatedInfo: response
+            });
+        } else {
+            res.status(400).json({
+                status: "fail",
+                message: "The email is not unique"
+            });
+        }
+        
     } catch (error) {
         res.status(400).json({
             status: "fail",
