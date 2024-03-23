@@ -5,7 +5,7 @@ import User from "../models/User";
 export const getCommentforUser = async (req: Request, res: Response) => {   
     try {
         const {userID} = req.params;
-        const response = await comment.find({targetUserID: userID})
+        const response = await comment.find({targetUserID: userID}).populate("sourceUserID targetUserID")
         res.status(200).json({
             status: "success",
             comment: response,

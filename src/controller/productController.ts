@@ -4,7 +4,7 @@ import {Request, Response} from "express";
 // get all products
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const data = await Product.find({});
+        const data = await Product.find({}).populate("userID");
     
         res.status(200).json({
           status: "success",
@@ -23,8 +23,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 // get a single products
 export const getProduct = async (req: Request, res: Response) => {
     try {
-      const data = await Product.findById(req.params.productID);
-        
+      const data = await Product.findById(req.params.productID).populate("userID");
       res.status(200).json({
         status: "success",
         data,
@@ -41,8 +40,7 @@ export const getProduct = async (req: Request, res: Response) => {
   // get all products that matches the userID
 export const getUserProducts = async (req: Request, res: Response) => {
     try {
-        const data = await Product.find({userID: req.params.userID});
-    
+        const data = await Product.find({userID: req.params.userID}).populate("userID");
         res.status(200).json({
           status: "success",
           results: data.length,
@@ -59,7 +57,6 @@ export const getUserProducts = async (req: Request, res: Response) => {
 
 //add product
 export const addProduct = async (req: Request, res: Response) => {
-    console.log(req.body);
     try {
         const newProduct = await Product.create(req.body);
         res.status(201).json({

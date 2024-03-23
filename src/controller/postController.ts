@@ -1,10 +1,11 @@
+import User from "../models/User";
 import Post from "../models/post";
 import {Request, Response} from "express";
 
 // get all posts
 export const getAllPosts = async (req: Request, res: Response) => {
     try {
-        const data = await Post.find({});
+        const data = await Post.find({}).populate("category userID").populate("userID category");
     
         res.status(200).json({
           status: "success",
@@ -23,8 +24,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
   // get all posts that matches the userID
 export const getUserposts = async (req: Request, res: Response) => {
     try {
-        const data = await Post.find({userID: req.params.userID});
-    
+        const data = await Post.find({userID: req.params.userID}).populate("category userID");
         res.status(200).json({
           status: "success",
           results: data.length,
@@ -42,13 +42,21 @@ export const getUserposts = async (req: Request, res: Response) => {
 //add post
 export const addpost = async (req: Request, res: Response) => {
     try {
-        const newPost = await Post.create(req.body);
-        res.status(201).json({
-          status: "success",
-          data: {
-            post: newPost,
-          },
-        });
+        const user = await User.findById(req.body.userID);
+        if (user) {
+          const newPost = await Post.create(req.body);
+          res.status(201).json({
+            status: "success",
+            data: {
+              post: newPost,
+            },
+          });
+        } else {
+          res.status(400).json({
+            status: "fail",
+            message: "The user is not found ",
+          });
+        }   
       } catch (err) {
         res.status(400).json({
           status: "fail",

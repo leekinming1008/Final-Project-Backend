@@ -19,10 +19,11 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Address is required"],  
     },
-    wishList: {
-        type: Array,
+    wishList: [{
+        type: Schema.ObjectId,
+        ref: `product`,
         required: [false],
-    },
+    }],
     password: {
         type: String,
         required: [true, "Password is required"],
