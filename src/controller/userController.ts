@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Comment from "../models/Comment";
 import User from "../models/User";
 import post from "../models/post";
@@ -8,8 +9,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
     console.log("Enter the get user info function");   
     try {
         const {userID} = req.params;
-        console.log(userID)
-        const response = await User.findById(userID);
+        const response = await User.findById(userID).populate(`wishList`);
         res.status(200).json({
             status: "success",
             data: response,
@@ -26,7 +26,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
     try {
             const isEmailAddressAppear = await User.find({emailAddress: req.body.emailAddress});
-            if (isEmailAddressAppear) {
+            if (isEmailAddressAppear.length != 0) {
                 res.status(400).json({
                     status: "fail",
                     message: "The email address already exist in the database" 
@@ -109,15 +109,15 @@ export const addProductToWishlist = async (req: Request, res: Response) => {
         const user = await User.findById(userID);
         const product = await Product.findById(productID);
         if (user && product) {
-            user.wishList.push(product);
+            user.wishList.push(product._id);
             const response = await User.updateOne({_id: userID}, user);
             res.status(202).json({
                 status: "success",
                 updatedResult: response
             });
         } else {
-            res.status(202).json({
-                status: "success",
+            res.status(400).json({
+                status: "fail",
                 message: "User is not found"
             });
         }
@@ -134,7 +134,7 @@ export const addProductToWishlist = async (req: Request, res: Response) => {
 export const getWishlistbyUser = async (req: Request, res:Response) => {
     try {
         const {userID} = req.body;
-        const response = await User.findById(userID);
+        const response = await User.findById(userID).populate(`wishList`);
         res.status(202).json({
             status: "success",
             wishlist: response?.wishList
@@ -151,14 +151,22 @@ export const getWishlistbyUser = async (req: Request, res:Response) => {
 export const removeProductFromWishlist = async (req: Request, res: Response) => {
     const {userID, productID} = req.body;
     const user = await User.findById(userID);
+    console.log(user);
     try {
         if (user) {
             const userWishlist = user.wishList;
-            userWishlist.splice(userWishlist.indexOf({productID}), 1);
+            const objectId = mongoose.Types.ObjectId.createFromHexString(productID);
+
+            userWishlist.splice(userWishlist.indexOf(objectId), 1);
             const response = await User.updateOne({_id: userID}, user);
             res.status(202).json({
                 status: "success",
                 wishlist: response
+            });
+        } else {
+            res.status(400).json({
+                status: "fail",
+                message: "User is not found"
             });
         }
     } catch (error) {

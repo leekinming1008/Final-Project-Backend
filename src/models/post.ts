@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import category from "./Category";
 
 const postSchema = new Schema({
     image: {
@@ -11,10 +12,12 @@ const postSchema = new Schema({
     },
     category: {
         type: Schema.ObjectId,
+        ref: `category`,
         required: [true, "Category is required"]
     },
     userID: {
         type: Schema.ObjectId,
+        ref: `user`,
         required: [true, "UserID is required"]
     },
 },
