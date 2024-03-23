@@ -1,10 +1,11 @@
 import User from "../models/User";
+import Product from "../models/product"
 import {Request, Response} from "express";
 
 export const getUserInfo = async (req: Request, res: Response) => {   
     try {
-        const {userId} = req.params;
-        const response = await User.findById(userId);
+        const {userID} = req.params;
+        const response = await User.findById(userID);
         res.status(200).json({
             status: "success",
             data: response,
@@ -55,9 +56,9 @@ export const checkUserPassword = async (req: Request, res:Response) => {
 
 export const editUser = async (req: Request, res: Response)=> {
     try {
-        const {userId} = req.params;
+        const {userID} = req.params;
         const updatedInfo = req.body;
-        const response = await User.updateOne({_id: userId}, updatedInfo);
+        const response = await User.updateOne({_id: userID}, updatedInfo);
         res.status(201).json({
             status: "success",
             updatedInfo: response});
@@ -66,14 +67,16 @@ export const editUser = async (req: Request, res: Response)=> {
             status: "fail",
             message: error,
         })
-        console.error("Error catch when calling the edit planes function.", error);
+        console.error("Error catch when calling the edit user function.", error);
     }
 }
 
+
+// TODO: need to delete all the product, comment and user informaiton for that user
 export const deleteUser = async (req: Request, res: Response) => {
     try {
-        const {userId} = req.params;
-        const response = await User.deleteOne({_id: userId});
+        const {userID} = req.params;
+        const response = await User.deleteOne({_id: userID});
         res.status(202).json({
             status: "success",
             deletedUser: response});
@@ -82,6 +85,34 @@ export const deleteUser = async (req: Request, res: Response) => {
             status: "fail",
             message: error,
         })
-        console.error("Error catch when calling the delete planes function.", error);
+        console.error("Error catch when calling the delete user function.", error);
+    }   
+}
+
+export const addProductToWishlist = async (req: Request, res: Response) => {
+    try {
+        const {userID, productID} = req.body;
+        const user = await User.findById(userID);
+        const product = await Product.findById(productID);
+        if (user && product) {
+            user.wishList.push(product);
+            const response = await User.updateOne({_id: userID}, user);
+            res.status(202).json({
+                status: "success",
+                updatedResult: response
+            });
+        } else {
+            res.status(202).json({
+                status: "success",
+                message: "User is not found"
+            });
+        }
+        
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error,
+        })
+        console.error("Error catch when calling the add product to wishlist function.", error);
     }   
 }
