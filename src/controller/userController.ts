@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
+import {Request, Response} from "express";
 import Comment from "../models/Comment";
 import User from "../models/User";
 import post from "../models/post";
 import Product from "../models/product"
-import {Request, Response} from "express";
 
 export const getUserInfo = async (req: Request, res: Response) => {
     console.log("Enter the get user info function");   
@@ -93,7 +93,8 @@ export const deleteUser = async (req: Request, res: Response) => {
         const commentDelete = await Comment.deleteMany({targetUserID: userID} || {sourceUserID: userID});
         res.status(202).json({
             status: "success",
-            deletedItems: [userDelete, productDelete, postDelete, commentDelete]});
+            deletedItems: [userDelete, productDelete, postDelete, commentDelete]
+        });
     } catch (error) {
         res.status(400).json({
             status: "fail",

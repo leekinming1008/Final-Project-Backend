@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import category from "./Category";
 
 const postSchema = new Schema({
     image: {
