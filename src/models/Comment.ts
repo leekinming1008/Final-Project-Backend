@@ -2,11 +2,11 @@ import {Schema, model} from "mongoose"
 
 const commentSchema = new Schema({
     targetUserID: {
-        type: String,
+        type: Schema.ObjectId,
         required: [true, "Target user id is required"]
     },
     sourceUserID: {
-        type: String,
+        type: Schema.ObjectId,
         required: [true, "Source user id is required"]
     },
     comment: {

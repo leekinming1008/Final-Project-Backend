@@ -18,7 +18,7 @@ const productSchema = new Schema({
         required: [true, "Price is required"]
     },
     userID: {
-        type: String,
+        type: Schema.ObjectId,
         required: [true, "UserID is required"]
     },
 },

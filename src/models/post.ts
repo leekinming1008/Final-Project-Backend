@@ -10,11 +10,11 @@ const postSchema = new Schema({
         required: [true, "Description is required"]
     },
     category: {
-        type: String,
+        type: Schema.ObjectId,
         required: [true, "Category is required"]
     },
     userID: {
-        type: String,
+        type: Schema.ObjectId,
         required: [true, "UserID is required"]
     },
 },
