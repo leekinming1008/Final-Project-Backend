@@ -4,8 +4,8 @@ import User from "../models/User";
 
 export const getCommentforUser = async (req: Request, res: Response) => {   
     try {
-        const {userId} = req.params;
-        const response = await comment.find({targetUserID: userId})
+        const {userID} = req.params;
+        const response = await comment.find({targetUserID: userID})
         res.status(200).json({
             status: "success",
             comment: response,
@@ -21,8 +21,9 @@ export const getCommentforUser = async (req: Request, res: Response) => {
 
 export const createComment = async (req: Request, res: Response) => {
     try {
-            const targetUser = await User.findById(req.body.targetUserID);
-            const sourceUser = await User.findById(req.body.sourceUserID);
+            const {targetUserID, sourceUserID} = req.body;
+            const targetUser = await User.findById(targetUserID);
+            const sourceUser = await User.findById(sourceUserID);
             if (targetUser && sourceUser) {
                 const response = await comment.create(req.body);
                 res.status(201).json({

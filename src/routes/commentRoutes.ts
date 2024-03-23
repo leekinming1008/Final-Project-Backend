@@ -3,7 +3,7 @@ import { createComment, getCommentforUser } from "../controller/commentControlle
 
 const commentRouter = express.Router();
 
-commentRouter.route("/:userId").get(getCommentforUser);
+commentRouter.route("/:userID").get(getCommentforUser);
 commentRouter.route("/").post(createComment);
 
 export default commentRouter

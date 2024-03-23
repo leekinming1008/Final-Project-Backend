@@ -1,10 +1,14 @@
+import Comment from "../models/Comment";
 import User from "../models/User";
+import post from "../models/post";
 import Product from "../models/product"
 import {Request, Response} from "express";
 
-export const getUserInfo = async (req: Request, res: Response) => {   
+export const getUserInfo = async (req: Request, res: Response) => {
+    console.log("Enter the get user info function");   
     try {
         const {userID} = req.params;
+        console.log(userID)
         const response = await User.findById(userID);
         res.status(200).json({
             status: "success",
@@ -76,10 +80,13 @@ export const editUser = async (req: Request, res: Response)=> {
 export const deleteUser = async (req: Request, res: Response) => {
     try {
         const {userID} = req.params;
-        const response = await User.deleteOne({_id: userID});
+        const userDelete = await User.deleteOne({_id: userID});
+        const productDelete = await Product.deleteMany({userID: userID});
+        const postDelete = await post.deleteMany({userID: userID});
+        const commentDelete = await Comment.deleteMany({targetUserID: userID} || {sourceUserID: userID});
         res.status(202).json({
             status: "success",
-            deletedUser: response});
+            deletedItems: [userDelete, productDelete, postDelete, commentDelete]});
     } catch (error) {
         res.status(400).json({
             status: "fail",

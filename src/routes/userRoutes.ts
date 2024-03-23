@@ -5,8 +5,7 @@ const userRouter = express.Router();
 
 userRouter.route("/").post(createUser);
 userRouter.route("/login").get(checkUserPassword);
-userRouter.route("/getWishlist").get(getWishlistbyUser);
-userRouter.route("/addWishlist").post(addProductToWishlist);
-userRouter.route("/:userId").get(getUserInfo).patch(editUser).put(editUser).delete(deleteUser);
+userRouter.route("/wishlist").get(getWishlistbyUser).post(addProductToWishlist);
+userRouter.route("/:userID").get(getUserInfo).patch(editUser).put(editUser).delete(deleteUser);
 
 export default userRouter
