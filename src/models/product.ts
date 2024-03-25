@@ -1,6 +1,10 @@
 import { Schema, model } from "mongoose";
 
 const productSchema = new Schema({
+    image: {
+        type: String,
+        required: [true, "The image is needed"]
+    },
     name: {
         type: String,
         required: [true, "Name is required"]
