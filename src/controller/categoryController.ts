@@ -6,7 +6,7 @@ export const getAllCategory = async (req: Request, res: Response) => {
         const response = await Category.find()
         res.status(200).json({
             status: "success",
-            cateogry: response,
+            category: response,
         })
     } catch (error) {
         res.status(400).json({
