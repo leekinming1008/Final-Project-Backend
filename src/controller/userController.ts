@@ -57,6 +57,7 @@ export const checkUserPassword = async (req: Request, res:Response) => {
         res.status(201).json({
             status: "success",
             result: password == response?.password,
+            userID: response?.id
         });
     } catch (error) {
         res.status(400).json({
