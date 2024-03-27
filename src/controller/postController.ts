@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/User";
 import Post from "../models/post";
 import {Request, Response} from "express";
@@ -44,7 +45,14 @@ export const addpost = async (req: Request, res: Response) => {
     try {
         const user = await User.findById(req.body.userID);
         if (user) {
-          const newPost = await Post.create(req.body);
+          const userIDobject = mongoose.Types.ObjectId.createFromHexString(req.body.userID);
+          const categoryObjectID = mongoose.Types.ObjectId.createFromHexString(req.body.category);
+          const newPost = await Post.create({
+            image: req.body.image,
+            description: req.body.description,
+            category: categoryObjectID,
+            userID: userIDobject
+          });
           res.status(201).json({
             status: "success",
             data: {
