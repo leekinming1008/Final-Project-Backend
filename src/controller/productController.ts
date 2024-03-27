@@ -113,7 +113,7 @@ export const removeProduct = async (req: Request, res: Response) => {
     try {
       const categoryID = req.params.categoryID;
       const objectID = mongoose.Types.ObjectId.createFromHexString(categoryID);
-      const data = await Product.find({category: objectID});
+      const data = await Product.find({category: objectID}).populate("userID category");
       res.status(200).json({
         status: "success",
         data,
