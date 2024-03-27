@@ -58,8 +58,18 @@ export const getUserProducts = async (req: Request, res: Response) => {
 
 //add product
 export const addProduct = async (req: Request, res: Response) => {
+  console.log(req.body.category)
     try {
-        const newProduct = await Product.create(req.body);
+      const categoryObjectID = mongoose.Types.ObjectId.createFromHexString(req.body.category);
+      const userObjectID= mongoose.Types.ObjectId.createFromHexString(req.body.userID);
+        const newProduct = await Product.create({
+          image: req.body.image,
+          name: req.body.name,
+          description: req.body.description,
+          category: categoryObjectID,
+          price: req.body.price,
+          userID: userObjectID
+        });
         res.status(201).json({
           status: "success",
           data: {
