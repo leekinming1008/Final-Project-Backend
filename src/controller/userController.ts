@@ -145,8 +145,10 @@ export const addProductToWishlist = async (req: Request, res: Response) => {
 
 export const getWishlistbyUser = async (req: Request, res:Response) => {
     try {
-        const {userID} = req.body;
+        const {userID} = req.params;
+        console.log(req)
         const response = await User.findById(userID).populate(`wishList`);
+        console.log(response)
         res.status(202).json({
             status: "success",
             wishlist: response?.wishList

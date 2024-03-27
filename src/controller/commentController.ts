@@ -1,6 +1,7 @@
 import comment from "../models/Comment";
 import {Request, Response} from "express";
 import User from "../models/User";
+import mongoose from "mongoose";
 
 export const getCommentforUser = async (req: Request, res: Response) => {   
     try {
@@ -24,8 +25,14 @@ export const createComment = async (req: Request, res: Response) => {
             const {targetUserID, sourceUserID} = req.body;
             const targetUser = await User.findById(targetUserID);
             const sourceUser = await User.findById(sourceUserID);
-            if (targetUser && sourceUser) {
-                const response = await comment.create(req.body);
+            const targetUserIDObject = mongoose.Types.ObjectId.createFromHexString(targetUserID);
+            const sourceUserIDObject = mongoose.Types.ObjectId.createFromHexString(sourceUserID);
+           if (targetUser && sourceUser) {
+                const response = await comment.create({
+                    targetUserID: targetUserIDObject,
+                    sourceUserID: sourceUserIDObject,
+                    comment: req.body.comment
+                });
                 res.status(201).json({
                     status: "success",
                     data: {
