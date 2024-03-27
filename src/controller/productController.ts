@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Product from "../models/product";
 import {Request, Response} from "express";
 
@@ -106,3 +107,23 @@ export const removeProduct = async (req: Request, res: Response) => {
       console.error("Get error for delete product function: ", err)
     }
   };
+
+  // get product by category
+  export const getProductByCategory = async (req: Request, res: Response) => {
+    try {
+      const categoryID = req.params.categoryID;
+      const objectID = mongoose.Types.ObjectId.createFromHexString(categoryID);
+      const data = await Product.find({category: objectID});
+      res.status(200).json({
+        status: "success",
+        data,
+      });
+
+    } catch (err) {
+      res.status(400).json({
+        status: "fail",
+        message: err,
+      });
+      console.error("Get error for get product by category function: ", err)
+    }
+  }
