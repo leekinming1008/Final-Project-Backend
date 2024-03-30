@@ -58,18 +58,9 @@ export const getUserProducts = async (req: Request, res: Response) => {
 
 //add product
 export const addProduct = async (req: Request, res: Response) => {
-  console.log(req.body.category)
     try {
-      const categoryObjectID = mongoose.Types.ObjectId.createFromHexString(req.body.category);
-      const userObjectID= mongoose.Types.ObjectId.createFromHexString(req.body.userID);
-        const newProduct = await Product.create({
-          image: req.body.image,
-          name: req.body.name,
-          description: req.body.description,
-          category: categoryObjectID,
-          price: req.body.price,
-          userID: userObjectID
-        });
+      console.log(req.body)
+        const newProduct = await Product.create(req.body);
         res.status(201).json({
           status: "success",
           data: {
@@ -121,9 +112,9 @@ export const removeProduct = async (req: Request, res: Response) => {
   // get product by category
   export const getProductByCategory = async (req: Request, res: Response) => {
     try {
-      const categoryID = req.params.categoryID;
-      const objectID = mongoose.Types.ObjectId.createFromHexString(categoryID);
-      const data = await Product.find({category: objectID}).populate("userID category");
+      const {categoryID} = req.params;
+      console.log(categoryID);
+      const data = await Product.find({category: categoryID}).populate("userID category");
       res.status(200).json({
         status: "success",
         data,

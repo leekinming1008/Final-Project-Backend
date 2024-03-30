@@ -23,16 +23,11 @@ export const getCommentforUser = async (req: Request, res: Response) => {
 export const createComment = async (req: Request, res: Response) => {
     try {
             const {targetUserID, sourceUserID} = req.body;
+            console.log(req.body)
             const targetUser = await User.findById(targetUserID);
             const sourceUser = await User.findById(sourceUserID);
-            const targetUserIDObject = mongoose.Types.ObjectId.createFromHexString(targetUserID);
-            const sourceUserIDObject = mongoose.Types.ObjectId.createFromHexString(sourceUserID);
            if (targetUser && sourceUser) {
-                const response = await comment.create({
-                    targetUserID: targetUserIDObject,
-                    sourceUserID: sourceUserIDObject,
-                    comment: req.body.comment
-                });
+                const response = await comment.create(req.body);
                 res.status(201).json({
                     status: "success",
                     data: {
